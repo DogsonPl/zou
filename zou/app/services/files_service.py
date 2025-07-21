@@ -209,7 +209,7 @@ def get_next_working_revision(task_id, name):
     if len(working_files) > 0:
         revision = working_files[0].revision + 1
     else:
-        revision = 1
+        revision = 0
     return revision
 
 
@@ -283,7 +283,7 @@ def create_new_output_revision(
     the context of a scene.
     """
 
-    if revision < 1:
+    if revision < 0:
         try:
             output_file = get_last_output_revision(
                 entity_id,
@@ -296,7 +296,7 @@ def create_new_output_revision(
 
             revision = output_file["revision"] + 1
         except NoOutputFileException:
-            revision = 1
+            revision = 0
 
     file_status_id = file_status_id or get_default_status()["id"]
 
@@ -389,7 +389,7 @@ def get_next_working_file_revision(task_id, name):
     if working_file is not None:
         revision = working_file["revision"] + 1
     else:
-        revision = 1
+        revision = 0
     return revision
 
 
@@ -418,7 +418,7 @@ def get_next_output_file_revision(
         )
         return last_output["revision"] + 1
     except NoOutputFileException:
-        return 1
+        return 0
 
 
 def get_last_output_revision(
@@ -439,7 +439,7 @@ def get_last_output_revision(
         OutputFile.query.filter_by(
             output_type_id=output_type_id, task_type_id=task_type_id, name=name
         )
-        .filter(OutputFile.revision > 0)
+        .filter(OutputFile.revision >= 0)
         .order_by(desc(OutputFile.revision))
     )
 

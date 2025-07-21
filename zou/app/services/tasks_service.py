@@ -503,7 +503,7 @@ def get_next_preview_revision(task_id):
         .order_by(PreviewFile.revision.desc())
         .all()
     )
-    revision = 1
+    revision = 0
     if len(preview_files) > 0:
         revision = preview_files[0].revision + 1
     return revision
